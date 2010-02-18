@@ -19,7 +19,7 @@
  * Software Foundation website at http://www.gnu.org/licenses/.
  *
  * PHP version 5
- * @copyright  Andreas Schempp 2009
+ * @copyright  Andreas Schempp 2009-2010
  * @author     Andreas Schempp <andreas@schempp.ch>
  * @license    http://opensource.org/licenses/lgpl-3.0.html
  * @version    $Id$
@@ -36,10 +36,22 @@ $GLOBALS['TL_DCA']['tl_page']['list']['label']['label_callback'] = array('tl_pag
 class tl_page_cacheicon extends Backend
 {
 
-	public function addImage($row, $label, $imageAttribute, DataContainer $dc, $blnReturnImage=false)
+	public function addImage($row, $label, $param3, $param4, $blnReturnImage=false)
 	{
+		// Parameter sorting has been changed in 2.8: http://dev.typolight.org/issues/show/1488
+		if (version_compare(VERSION.'.'.BUILD, '2.7.6', '>'))
+		{
+			$dc = $param3;
+			$imageAttribute = $param4;
+		}
+		else
+		{
+			$dc = $prama4;
+			$imageAttribute = $param3;
+		}
+		
 		$tl_page = new tl_page();
-		$label = version_compare(VERSION, '2.7.5', '>') ? $tl_page->addIcon($row, $label, $imageAttribute, $dc, $blnReturnImage) : $tl_page->addImage($row, $label, $imageAttribute, $dc);
+		$label = version_compare(VERSION.'.'.BUILD, '2.7.6', '>') ? $tl_page->addIcon($row, $label, $dc, $imageAttribute, $blnReturnImage) : $tl_page->addImage($row, $label, $imageAttribute, $dc);
 		
 		$objPage = $this->getPageDetails($row['id']);
 		
